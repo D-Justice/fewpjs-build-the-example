@@ -3,7 +3,48 @@ const EMPTY_HEART = '♡'
 const FULL_HEART = '♥'
 
 // Your JavaScript code goes here!
+//Variables
+const errorModal = document.querySelector('#modal');
+const errorMessage = document.querySelector('#modal-message')
+let heart = document.querySelectorAll('.like-glyph');
+let heartEmpty = false;
 
+//Functions
+const messageHide = (message) => {
+  message.classList.add('hidden');
+}
+messageHide(errorModal)
+
+const fillHeart = (e) => {
+  e.target.classList.add('activated-heart')
+  e.target.innerHTML = FULL_HEART;
+}
+
+const emptyHeart = (e) => {
+  e.target.classList.remove('activated-heart')
+  e.target.innerHTML = EMPTY_HEART;
+}
+
+const serverSendRecieve =  (e) => {
+  
+  mimicServerCall()
+  .then(() => {
+    let result = e.target.classList.contains('activated-heart');
+
+    if (!result) {fillHeart(e)}
+    else if (result) {emptyHeart(e)}
+    })
+
+  .catch((error) => { 
+    errorModal.classList.remove('hidden');
+    errorMessage.innerHTML = error;
+    setTimeout(() => errorModal.classList.add('hidden'), 5000)
+  })
+}
+
+
+//Events
+heart.forEach(eachHeart => eachHeart.addEventListener('click', serverSendRecieve))
 
 
 
@@ -23,3 +64,22 @@ function mimicServerCall(url="http://mimicServer.example.com", config={}) {
     }, 300);
   });
 }
+// Add the .hidden class to the error modal in the HTML so it does not appear when the page first loads
+
+// When a user clicks on an empty heart ("Recognizing events")
+
+//      Invoke mimicServerCall to simulate making a server request
+
+//      mimicServerCall randomly fails to simulate faulty network conditions
+//      When the server returns a failure status
+//       Respond to the error using a .catch(() => {}) block after your .then(() => {}) block.
+      // Display the error modal by removing the .hidden class
+      // Display the server error message in the modal
+      // Use setTimeout to hide the modal after 5 seconds (add the .hidden class)
+// When the server returns a success status
+      // Change the heart to a full heart
+      // Add the .activated-heart class to make the heart appear red
+// When a user clicks on a full heart
+      // Change the heart back to an empty heart
+      // Remove the .activated-heart class
+// Keep all your styling rules entirely in style.css. Do not manipulate any .style properties
